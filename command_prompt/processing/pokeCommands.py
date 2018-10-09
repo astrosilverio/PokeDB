@@ -3,6 +3,7 @@
 ########################################################
 ### Run command that is interpreted from interpreter ###
 ########################################################
+from sys import exit
 
 class Commands():
     def __init__(self):
@@ -12,16 +13,16 @@ class Commands():
         return "HELP ME!!!"
 
     def exitConsole(self):
-        sys.exit()
+        exit()
 
     def listTables(self):
-        "TABLES HERE"
+        return "TABLES HERE"
 
     def listDatabases(self):
-        "DATABSESSSSSS"
+        return "DATABSESSSSSS"
 
     def listUsers(self):
-        "USERS!"
+        return "USERS!"
 
 class RunIt(Commands):
 
