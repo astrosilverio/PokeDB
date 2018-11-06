@@ -34,7 +34,6 @@ class Interpret:
         SQL = SQLStatements()
         split_statement = self.statement.split()
         for word in split_statement:
-
             if SQL_STATEMENTS.get(word):
                 result = getattr(SQL, SQL_STATEMENTS.get(word))
                 print(result)
