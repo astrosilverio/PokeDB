@@ -11,12 +11,12 @@ def prompt():
     db_name = ""                            #<---Make this account for changing databases get_database(command)...
     mode = "-->"
     while True:
-        user_input = input("%s@%s%s " %(db_name, user_name, mode) )
+        user_input = input("%s@%s%s " %(db_name, user_name, mode) ).lower()
         I = Interpret(user_input)
-        if user_input == "SQL" and mode == "-->":
+        if user_input == "sql" and mode == "-->":
             mode = "={"
             I.runSQL()
-        elif user_input == "SQL" and mode == "={":
+        elif user_input == "sql" and mode == "={":
             print("Invalid SQL statement.")
         elif mode == "={":
             I.runSQL()
