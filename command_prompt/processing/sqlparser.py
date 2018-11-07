@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import re
-input1 = "WITH BLANK AS US SELECT this, that, those FROM tables and other tables with (#@&*Y$ )*(@$#TGHF(*V(@#f)))"
+import shlex
+#Example inputs here:
 inputRead = "select id1 from pokemon"
 inputWrite = "insert into pokemon (id, val) values (9, \"hey listen\")"
 inputCondition = "select * from pokemon where id=1"
 
 def clean_statement(rawSQL):
-    statement = rawSQL.lower().split()
+    statement = shlex.split(rawSQL.lower())
     return statement
 
 def select_sql(statement):
@@ -29,7 +30,10 @@ def select_sql(statement):
         extras = statement[extraStart:]
     else:
         extras = None
-    return columns, tables, extras
+    if extras:
+        return columns, tables, extras
+    else:
+        return columns, tables
 
 def insert_sql(statement):
     tableStart = statement.index('into')+1
@@ -37,16 +41,8 @@ def insert_sql(statement):
     table = statement[tableStart]
     tableCols = statement[tableStart+1:tableEnd]
     tableCols = [c.strip("(").strip(")") for c in tableCols]
-    print("TABLE HERE: ", table)
-    print("Columns of table HERE: ", tableCols)
     values = statement[tableEnd+1:]
-    combined = []
-    for v in values:
-        if "\"" in v:
-            phrase += v.strip("\"")
-            combined.append(phrase)
     values = [v.strip("(").strip(")") for v in values]
-    print("VALUES HERE: ", values)
     return table, values
 
 def parse(SQLstatement):
@@ -55,8 +51,8 @@ def parse(SQLstatement):
         operation = select_sql(statement)
     elif 'insert' in statement:
         operation = insert_sql(statement)
+    return operation
 
-print("input1: ", parse(input1))
 print("read input: ", parse(inputRead))
 print("write input: ", parse(inputWrite))
 print("condition input: ", parse(inputCondition))
