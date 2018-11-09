@@ -4,8 +4,8 @@ Database Engine (Recurse Center)
 ## Description
 Group of Recurse Center participants creating their own database engine
 
-Run `poke.py` to start a REPL.
-SQL processing is in processing/
+Run `pokedb/command_prompt/poke.py` to start a REPL.
+SQL processing is in pokedb/command_prompt/processing/
 Access management is in pokedb/access/
 Transaction management is in pokedb/transactions/
 Lock management is in pokedb/locks/
@@ -14,11 +14,11 @@ Logging is in pokedb/logs/
 
 ## Main Process
 
-`poke.py` will give you a way input raw SQL and receive responses from the data layer.
+`pokedb/command_prompt/poke.py` will give you a way input raw SQL and receive responses from the data layer.
 
 There will soon be a daemon process that lives at top-level as well that will listen on socket 1188 for incoming requests to the database.
 
-SQL Processing lives in processing/.
+SQL Processing lives in pokedb/command_prompt/processing/.
 
 ## Access Management
 
