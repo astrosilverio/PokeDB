@@ -1,0 +1,5 @@
+TXN_IN_PROGRESS = 'in progress'
+TXN_COMMITTING = 'committing'
+TXN_ABORTED = 'aborted'
+TXN_ROLLBACK = 'rolling back'
+TXN_DONE = 'done'
