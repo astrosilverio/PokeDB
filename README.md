@@ -14,11 +14,19 @@ Logging is in pokedb/logs/
 
 ## Main Process
 
-`pokedb/command_prompt/poke.py` will give you a way input raw SQL and receive responses from the data layer.
+`pokedb/command_prompt/poke.py` will give you a way to input raw SQL and receive responses from the data layer.
 
 There will soon be a daemon process that lives at top-level as well that will listen on socket 1188 for incoming requests to the database.
 
-SQL Processing lives in pokedb/command_prompt/processing/.
+SQL Processing lives in pokedb/command_prompt/processing/. Current operation runs on sqlparser.py which processes simple SQL statements:
+
+```SQL
+select id1 from pokemon
+insert into pokemon (id, val) values (9, \"hey listen\")
+select * from pokemon where id=1
+```
+
+More robust SQL parser in the works.
 
 ## Access Management
 

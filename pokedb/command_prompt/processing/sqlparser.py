@@ -53,9 +53,9 @@ def parse(SQLstatement):
         operation = insert_sql(statement)
     return operation
 
-print("read input: ", parse(inputRead))
-print("write input: ", parse(inputWrite))
-print("condition input: ", parse(inputCondition))
+#print("read input: ", parse(inputRead))
+#print("write input: ", parse(inputWrite))
+#print("condition input: ", parse(inputCondition))
 
 # Transactions
 # SELECT/READ = id, id, id
