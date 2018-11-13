@@ -1,3 +1,11 @@
+"""
+API:
+`get_read_locks`
+`get_write_locks`
+`release_locks_for_txn`
+"""
+
+
 import os
 
 from pokedb.locks.isolation import read_committed
