@@ -8,6 +8,7 @@ API to access layer:
 import os
 
 from pokedb.storage.pager import Pager
+from pokedb.storage.serializer import serialize, deserialize
 
 
 DBFILE = os.getenv('DBFILE', 'test.db')
