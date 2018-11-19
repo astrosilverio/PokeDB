@@ -15,19 +15,28 @@ DBFILE = os.getenv('DBFILE', 'test.db')
 _pager = None
 
 
+# In-memory storage
+_storage = dict()
+_temp = dict()
+
+
 def start():
     global _pager
     _pager = Pager(DBFILE)
 
 
-def get_row(row_id, page_num):
-    page = _pager.get_page(page_num)
-    return page  # notttttt at all what it should be
+def get_row(txn_id, row_id, page_num):
+    data = dict()
+    data[row_id] = _storage.get(row_id, None)
+    updated_value =  _temp[txn_id].get(row_id, None)
+    if updated_value:
+        data[row_id] = updated_value
+    return data
 
 
-def write_row(row_id, data, page_num):
-    page = _pager.get_page(page_num)
-    return page  # NOPE
+def write_row(txn_id, row_id, data, page_num):
+    _temp[txn_id][row_id] = value
+    return page_num
 
 
 def sync(page_num):
