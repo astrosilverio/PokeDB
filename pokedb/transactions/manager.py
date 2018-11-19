@@ -1,3 +1,4 @@
+from pokedb.locks import release_locks_for_txn
 from pokedb.locks.exceptions import LockException
 from pokedb.transactions.constants import TXN_IN_PROGRESS, TXN_COMMITTING, TXN_ABORTED, TXN_ROLLBACK, TXN_DONE
 from pokedb.transactions.exceptions import TransactionStatusError
@@ -13,8 +14,7 @@ class Transaction(object):
 
 class TransactionManager(object):
 
-    def __init__(self, lock_manager):
-        self.lock_manager = lock_manager
+    def __init__(self):
         self.next_txn_id = 1
         self.transactions = dict()
         self.transaction_statuses = dict()
@@ -28,6 +28,8 @@ class TransactionManager(object):
 
         self.transactions[new_txn_id] = txn
         self.transaction_statuses[new_txn_id] = TXN_IN_PROGRESS
+        from pokedb.access import start_txn
+        start_txn(new_txn_id)
         return response
 
     def commit(self, txn_id):
@@ -38,13 +40,14 @@ class TransactionManager(object):
         txn = self.transactions[txn_id]
 
         try:
-            self.lock_manager.release_locks_for_txn(txn.id)
+            release_locks_for_txn(txn.id)
         except LockException as e:
             response = "could not release locks"
         else:
             response = "committed"
-
+        from pokedb.access import finish_write
         self.transaction_statuses[txn_id] = TXN_DONE
+        finish_write(txn_id)
         return response
 
     def rollback(self, txn_id):
@@ -55,7 +58,7 @@ class TransactionManager(object):
         txn = self.transactions[txn_id]
 
         try:
-            self.lock_manager.release_locks_for_txn(txn.id)
+            release_locks_for_txn(txn.id)
         except LockException as e:
             response = "could not release locks"
         else:
