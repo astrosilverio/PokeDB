@@ -27,7 +27,7 @@ def read(txn_id, row_id):
     except LockException:
         return "Lock collision for read"
     else:
-        data = storage.get_row(txn_id, row_id, 1)
+        data = storage.get_row(txn_id, 'main', row_id, 1)
         return data
 
 
@@ -37,7 +37,7 @@ def write(txn_id, row_id, value):
     except LockException:
         return "Lock collision for write"
     else:
-        storage.write_row(txn_id, row_id, value, 1)
+        storage.write_row(txn_id, 'main', row_id, (value), 1)
         return 'ok'
 
 
