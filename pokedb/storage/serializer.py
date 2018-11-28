@@ -11,6 +11,6 @@ def serialize(schema, deserialized_row):
 
 def deserialize(schema, serialized_row):
     deserialized_row = dict()
-    for field_name, field_value in izip(schema, serialized_row)
+    for field_name, field_value in izip(schema, serialized_row):
         deserialized_row[field_name] = field_value
     return deserialized_row

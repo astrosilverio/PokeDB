@@ -1,7 +1,7 @@
 import unittest
 from mock import patch
 
-from pokedb import access, locks
+from pokedb import access, locks, storage
 from pokedb.locks.exceptions import LockException
 
 
@@ -14,10 +14,10 @@ class TestAccessStartUp(unittest.TestCase):
 class TestReadRow(unittest.TestCase):
 
     def setUp(self):
-        access._storage = dict()
-        access._temp = dict()
-        access._temp[1] = dict()
-        access._temp[2] = dict()
+        storage._storage = dict()
+        storage._temp = dict()
+        storage._temp[1] = dict()
+        storage._temp[2] = dict()
 
         locks.start()
 
@@ -38,30 +38,30 @@ class TestReadRow(unittest.TestCase):
         self.assertEqual(response, {1: None})
 
     def test_returns_stored_value(self):
-        access._storage[1] = 'test'
-        access._temp[2] = {1: 'updated'}
+        storage._storage[1] = (['test'])
+        storage._temp[2] = {1: 'updated'}
         response = access.read(1, 1)
-        self.assertEqual(response, {1: 'test'})
+        self.assertEqual(response, {1: {'value': 'test'}})
 
     def test_prefers_transaction_specific_value(self):
-        access._storage[1] = 'test'
-        access._temp[2] = {1: 'updated'}
+        storage._storage[1] = ('test'),
+        storage._temp[2] = {1: ('updated',)}
         response = access.read(2, 1)
-        self.assertEqual(response, {1: 'updated'})
+        self.assertEqual(response, {1: {'value': 'updated'}})
 
     def tearDown(self):
-        access._storage = dict()
-        access._temp = dict()
+        storage._storage = dict()
+        storage._temp = dict()
 
         locks.stop()
 
 class TestWriteRow(unittest.TestCase):
 
     def setUp(self):
-        access._storage = dict()
-        access._temp = dict()
-        access._temp[1] = dict()
-        access._temp[2] = dict()
+        storage._storage = dict()
+        storage._temp = dict()
+        storage._temp[1] = dict()
+        storage._temp[2] = dict()
 
         locks.start()
 
@@ -78,15 +78,15 @@ class TestWriteRow(unittest.TestCase):
         self.assertEqual(response, "Lock collision for write")
 
     def test_does_not_write_over_main_table(self):
-        access._storage[1] = 'test'
-        access._temp[2] = dict()
+        storage._storage[1] = ('test',)
+        storage._temp[2] = dict()
         response = access.write(2, 1, 'updated')
-        self.assertEqual(access._temp[2][1], 'updated')
-        self.assertEqual(access._storage[1], 'test')
+        self.assertEqual(storage._temp[2][1], ('updated',))
+        self.assertEqual(storage._storage[1], ('test',))
 
     def tearDown(self):
-        access._storage = dict()
-        access._temp = dict()
+        storage._storage = dict()
+        storage._temp = dict()
 
         locks.stop()
 
@@ -94,19 +94,19 @@ class TestWriteRow(unittest.TestCase):
 class TestFinishWrite(unittest.TestCase):
 
     def setUp(self):
-        access._storage = dict()
-        access._temp = dict()
-        access._temp[1] = dict()
-        access._temp[2] = dict()
+        storage._storage = dict()
+        storage._temp = dict()
+        storage._temp[1] = dict()
+        storage._temp[2] = dict()
 
     def tearDown(self):
-        access._storage = dict()
-        access._temp = dict()
+        storage._storage = dict()
+        storage._temp = dict()
 
     def test_writes_to_main_storage(self):
-        access._storage[1] = 'test'
-        access._temp[2] = {1: 'updated'}
+        storage._storage[1] = 'test'
+        storage._temp[2] = {1: 'updated'}
 
         access.finish_write(2)
 
-        self.assertEqual(access._storage[1], 'updated')
+        self.assertEqual(storage._storage[1], 'updated')

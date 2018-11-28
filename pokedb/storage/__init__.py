@@ -20,7 +20,7 @@ _pager = None
 _storage = dict()
 _temp = dict()
 _table_schema = {
-    'main': ('value'),
+    'main': ('value',),
 }
 
 
@@ -34,9 +34,12 @@ def get_row(txn_id, table, row_id, page_num):
     updated_value =  _temp[txn_id].get(row_id, None)
     if updated_value:
         raw_data = updated_value
-    schema = _table_schema.get(table)
-    data = deserialize(schema, raw_data)
-    return data
+    if raw_data:
+        schema = _table_schema.get(table)
+        data = deserialize(schema, raw_data)
+    else:
+        data = None
+    return {row_id: data}
 
 
 def write_row(txn_id, table, row_id, data, page_num):

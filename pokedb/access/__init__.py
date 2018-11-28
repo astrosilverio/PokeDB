@@ -37,7 +37,7 @@ def write(txn_id, row_id, value):
     except LockException:
         return "Lock collision for write"
     else:
-        storage.write_row(txn_id, 'main', row_id, (value), 1)
+        storage.write_row(txn_id, 'main', row_id, {'value': value}, 1)
         return 'ok'
 
 

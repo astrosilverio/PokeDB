@@ -1,7 +1,7 @@
 import unittest
 from mock import patch
 
-from pokedb import access, locks
+from pokedb import access, locks, storage
 from pokedb.locks.exceptions import LockException
 from pokedb.transactions.constants import (
     TXN_IN_PROGRESS,
@@ -40,7 +40,7 @@ class TestBeginTransaction(unittest.TestCase):
     def test_creates_temp_storage_for_txn(self):
         txn_id = self.manager.begin_transaction()
 
-        self.assertEqual(access._temp[txn_id], dict())
+        self.assertEqual(storage._temp[txn_id], dict())
 
 
 class TestCommitTransaction(unittest.TestCase):
