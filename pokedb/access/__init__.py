@@ -1,7 +1,7 @@
 """
 API from main process:
-`get`
-`put`
+`read`
+`write`
 """
 
 # from pokedb.access.btree import build
@@ -16,6 +16,7 @@ from pokedb.locks.exceptions import LockException
 _storage = dict()
 _temp = dict()
 
+
 def start():
     """Load btree"""
     pass
@@ -23,6 +24,7 @@ def start():
 
 def start_txn(txn_id):
     _temp[txn_id] = dict()
+
 
 def read(txn_id, row_id):
     try:
@@ -36,6 +38,7 @@ def read(txn_id, row_id):
         if updated_value:
             data[row_id] = updated_value
         return data
+
 
 def write(txn_id, row_id, value):
     try:
