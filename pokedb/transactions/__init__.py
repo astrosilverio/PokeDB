@@ -37,3 +37,8 @@ def rollback(txn_id):
 
 def is_done(txn_id):
     return _transaction_manager.transaction_statuses.get(txn_id, None) == 'done'
+
+
+def stop():
+    global _transaction_manager
+    del _transaction_manager
