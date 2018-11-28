@@ -45,9 +45,9 @@ class TransactionManager(object):
             response = "could not release locks"
         else:
             response = "committed"
-        from pokedb.access import finish_write
-        self.transaction_statuses[txn_id] = TXN_DONE
-        finish_write(txn_id)
+            self.transaction_statuses[txn_id] = TXN_DONE
+            from pokedb.access import finish_write
+            finish_write(txn_id)
         return response
 
     def rollback(self, txn_id):
@@ -63,6 +63,6 @@ class TransactionManager(object):
             response = "could not release locks"
         else:
             response = "aborted"
+            self.transaction_statuses[txn_id] = TXN_ABORTED
 
-        self.transaction_statuses[txn_id] = TXN_ABORTED
         return response
