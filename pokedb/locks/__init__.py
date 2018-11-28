@@ -55,3 +55,8 @@ def get_locks_for_read(txn_id, table, rows):
 
 def get_locks_for_write(txn_id, table, rows):
     _lock_manager.get_locks_for_write(txn_id, table, rows)
+
+
+def stop():
+    global _lock_manager
+    _lock_manager = None

@@ -53,6 +53,7 @@ class TestReadRow(unittest.TestCase):
         access._storage = dict()
         access._temp = dict()
 
+        locks.stop()
 
 class TestWriteRow(unittest.TestCase):
 
@@ -86,6 +87,8 @@ class TestWriteRow(unittest.TestCase):
     def tearDown(self):
         access._storage = dict()
         access._temp = dict()
+
+        locks.stop()
 
 
 class TestFinishWrite(unittest.TestCase):
