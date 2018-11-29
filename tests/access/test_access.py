@@ -38,14 +38,16 @@ class TestReadRow(unittest.TestCase):
         self.assertEqual(response, {1: None})
 
     def test_returns_stored_value(self):
-        storage._storage[1] = (['test'])
-        storage._temp[2] = {1: 'updated'}
+        storage.write_row(1, 'main', 1, {'value': 'test'}, 1)
+        storage.write_row(2, 'main', 1, {'value': 'updated'}, 1)
+
         response = access.read(1, 1)
         self.assertEqual(response, {1: {'value': 'test'}})
 
     def test_prefers_transaction_specific_value(self):
-        storage._storage[1] = ('test'),
-        storage._temp[2] = {1: ('updated',)}
+        storage.write_row(1, 'main', 1, {'value': 'test'}, 1)
+        storage.write_row(2, 'main', 1, {'value': 'updated'}, 1)
+
         response = access.read(2, 1)
         self.assertEqual(response, {1: {'value': 'updated'}})
 
@@ -54,6 +56,7 @@ class TestReadRow(unittest.TestCase):
         storage._temp = dict()
 
         locks.stop()
+
 
 class TestWriteRow(unittest.TestCase):
 
@@ -76,13 +79,6 @@ class TestWriteRow(unittest.TestCase):
             response = access.write(1, 1, 'test')
 
         self.assertEqual(response, "Lock collision for write")
-
-    def test_does_not_write_over_main_table(self):
-        storage._storage[1] = ('test',)
-        storage._temp[2] = dict()
-        response = access.write(2, 1, 'updated')
-        self.assertEqual(storage._temp[2][1], ('updated',))
-        self.assertEqual(storage._storage[1], ('test',))
 
     def tearDown(self):
         storage._storage = dict()
