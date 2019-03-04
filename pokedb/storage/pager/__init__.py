@@ -1,1 +1,0 @@
-from pokedb.storage.pager.pager import Pager, PAGE_SIZE
