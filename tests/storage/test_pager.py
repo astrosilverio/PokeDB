@@ -2,7 +2,7 @@ import os
 import unittest
 from mock import patch
 
-from pager import pager
+from pokedb.storage import pager
 
 
 class TestPager(unittest.TestCase):
@@ -72,7 +72,7 @@ class TestPager(unittest.TestCase):
     def test_flush_raises_if_page_is_too_big(self):
         cached_page = "the answer is 42"
         self.pager.page_cache[0] = cached_page
-        with patch('python_data_layer.pager.PAGE_SIZE', 10):
+        with patch('pokedb.storage.pager.pager.PAGE_SIZE', 10):
             with self.assertRaises(ValueError) as e:
                 self.pager.flush_page(0)
 
