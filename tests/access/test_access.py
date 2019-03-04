@@ -38,18 +38,18 @@ class TestReadRow(unittest.TestCase):
         self.assertEqual(response, {1: None})
 
     def test_returns_stored_value(self):
-        storage.write_row(1, 'main', 1, {'value': 'test'}, 1)
-        storage.write_row(2, 'main', 1, {'value': 'updated'}, 1)
+        storage.write_row(1, 'main', 1, ('test',), 1)
+        storage.write_row(2, 'main', 1, ('updated',), 1)
 
         response = access.read(1, 1)
-        self.assertEqual(response, {1: {'value': 'test'}})
+        self.assertEqual(response, {1: ('test',)})
 
     def test_prefers_transaction_specific_value(self):
-        storage.write_row(1, 'main', 1, {'value': 'test'}, 1)
-        storage.write_row(2, 'main', 1, {'value': 'updated'}, 1)
+        storage.write_row(1, 'main', 1, ('test',), 1)
+        storage.write_row(2, 'main', 1, ('updated',), 1)
 
         response = access.read(2, 1)
-        self.assertEqual(response, {1: {'value': 'updated'}})
+        self.assertEqual(response, {1: ('updated',)})
 
     def tearDown(self):
         storage._storage = dict()

@@ -16,16 +16,18 @@ class TestReadRow(unittest.TestCase):
         self.assertEqual(response, {1: None})
 
     def test_returns_stored_value(self):
-        storage._storage[1] = ('test',)
-        storage._temp[2] = {1: ('updated',)}
+        fmt = storage._table_schema.get('main')
+        storage._storage[1] = storage.serializer.serialize(fmt, 'test')
+        storage._temp[2] = {1: storage.serializer.serialize(fmt, 'updated')}
         response = storage.get_row(1, 'main', 1, 1)
-        self.assertEqual(response, {1: {'value': 'test'}})
+        self.assertEqual(response, {1: ('test',)})
 
     def test_prefers_transaction_specific_value(self):
-        storage._storage[1] = ('test'),
-        storage._temp[2] = {1: ('updated',)}
+        fmt = storage._table_schema.get('main')
+        storage._storage[1] = storage.serializer.serialize(fmt, 'test'),
+        storage._temp[2] = {1: storage.serializer.serialize(fmt, 'updated')}
         response = storage.get_row(2, 'main', 1, 1)
-        self.assertEqual(response, {1: {'value': 'updated'}})
+        self.assertEqual(response, {1: ('updated',)})
 
     def tearDown(self):
         storage._storage = dict()
@@ -41,11 +43,12 @@ class TestWriteRow(unittest.TestCase):
         storage._temp[2] = dict()
 
     def test_does_not_write_over_main_table(self):
-        storage._storage[1] = ('test',)
+        fmt = storage._table_schema.get('main')
+        storage._storage[1] = storage.serializer.serialize(fmt, 'test')
         storage._temp[2] = dict()
-        response = storage.write_row(2, 'main', 1, {'value': 'updated'}, 1)
-        self.assertEqual(storage._temp[2][1], ('updated',))
-        self.assertEqual(storage._storage[1], ('test',))
+        response = storage.write_row(2, 'main', 1, ('updated',), 1)
+        self.assertEqual(storage._temp[2][1], storage.serializer.serialize(fmt, 'updated'))
+        self.assertEqual(storage._storage[1], storage.serializer.serialize(fmt, 'test'))
 
     def tearDown(self):
         storage._storage = dict()
