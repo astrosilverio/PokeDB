@@ -7,7 +7,7 @@ import struct
 _string_types = ['c', 'b', 'B', 's', 'p']
 
 
-def serialize(fmt, *deserialized_row):
+def serialize_to_bits(fmt, *deserialized_row):
     try:
         row = struct.pack(fmt, *deserialized_row)
     except struct.error as e:
@@ -16,7 +16,7 @@ def serialize(fmt, *deserialized_row):
         return row
 
 
-def deserialize(fmt, serialized_row):
+def deserialize_from_bits(fmt, serialized_row):
     try:
         row = struct.unpack(fmt, serialized_row)
     except struct.error as e:
@@ -34,14 +34,14 @@ def deserialize(fmt, serialized_row):
     return row
 
 
-def tuple_serialize(schema, deserialized_row):
+def serialize_to_tuple(schema, deserialized_row):
     serialized_fields = []
     for field in schema:
         serialized_fields.append(deserialized_row[field])
     return tuple(serialized_fields)
 
 
-def tuple_deserialize(schema, serialized_row):
+def deserialize_from_tuple(schema, serialized_row):
     deserialized_row = dict()
     if len(schema) != len(serialized_row):
         raise ValueError('data has been serialized weirdly')

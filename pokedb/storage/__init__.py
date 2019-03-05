@@ -7,8 +7,8 @@ API to access layer:
 
 import os
 
+from pokedb.schema import serialize, deserialize
 from pokedb.storage.pager import Pager
-from pokedb.storage.serializer import serialize, deserialize
 
 
 DBFILE = os.getenv('DBFILE', 'test.db')
@@ -19,10 +19,6 @@ _pager = None
 # In-memory storage
 _storage = dict()
 _temp = dict()
-_table_schema = {
-    'main': '32s',
-}
-
 
 def start():
     global _pager
@@ -35,8 +31,7 @@ def get_row(txn_id, table, row_id, page_num):
     if updated_value:
         raw_data = updated_value
     if raw_data:
-        fmt = _table_schema.get(table)
-        data = deserialize(fmt, raw_data)
+        data = deserialize(table, raw_data)
     else:
         data = None
     return {row_id: data}
